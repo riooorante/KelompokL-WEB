@@ -152,14 +152,14 @@ const Profile = () => {
           </div>
           <div className="col-span-2 flex items-center justify-center">
           <button
-  className={`${
-    isEditing ? 'bg-green-500 hover:bg-green-700' : 'bg-blue-500 hover:bg-blue-700'
-  } text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline`}
-  type="button"
-  onClick={isEditing ? handleSave : handleEdit}
->
-  {isEditing ? 'Save Profile Details' : 'Edit Profile Details'}
-</button>
+                className={`${
+                    isEditing ? 'bg-green-500 hover:bg-green-700' : 'bg-blue-500 hover:bg-blue-700'
+                } text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline`}
+                type="button"
+                onClick={isEditing ? handleSave : handleEdit}
+                >
+                {isEditing ? 'Save Profile Details' : 'Edit Profile Details'}
+                </button>
           </div>
         </form>
       </div>

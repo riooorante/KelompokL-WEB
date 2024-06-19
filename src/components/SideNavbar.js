@@ -1,7 +1,7 @@
 import React from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Disclosure } from "@headlessui/react";
-import { MdOutlineSpaceDashboard, MdOutlineLogout, MdOutlineAdd, MdOutlineVerifiedUser, MdOutlineListAlt, MdOutlineSchedule } from "react-icons/md";
+import { MdOutlineSpaceDashboard, MdOutlineLogout, MdOutlineAdd, MdOutlineVerifiedUser, MdOutlineListAlt, MdOutlineSchedule, MdOutlinePeopleAlt } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { useRouter } from 'next/router';
 
@@ -36,6 +36,10 @@ function SideNavbar() {
     router.push('/kegiatanharianlapas');
   };
 
+  const handleDaftarPengunjung = () => {
+    router.push('/pengunjung');
+  };
+
   return (
     <div>
       <Disclosure as="nav">
@@ -50,7 +54,7 @@ function SideNavbar() {
             <h1 className="text-base text-center cursor-pointer font-bold text-blue-900 border-b border-gray-100 pb-4 w-full">
               Menu 
             </h1>
-            <div className=" my-4 border-b border-gray-100 pb-4">
+            <div className="my-4 border-b border-gray-100 pb-4">
               <div onClick={handleDashboard} className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-gray-900 p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
                 <MdOutlineSpaceDashboard className="text-2xl text-gray-600 group-hover:text-white " />
                 <h3 className="text-base text-gray-800 group-hover:text-white font-semibold ">
@@ -64,7 +68,7 @@ function SideNavbar() {
                 </h3>
               </div>
               {/* tambah akun */}
-              <div className=" my-2 border-b border-gray-100 pb-2">
+              <div className="my-2 border-b border-gray-100 pb-2">
                 <div onClick={handleAddAccount} className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-gray-900 p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
                   <MdOutlineAdd className="text-2xl text-gray-600 group-hover:text-white " />
                   <h3 className="text-base text-gray-800 group-hover:text-white font-semibold ">
@@ -75,6 +79,12 @@ function SideNavbar() {
                   <MdOutlineVerifiedUser className="text-2xl text-gray-600 group-hover:text-white " />
                   <h3 className="text-base text-gray-800 group-hover:text-white font-semibold ">
                     Izin Kunjungan
+                  </h3>
+                </div>
+                <div onClick={handleDaftarPengunjung} className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-gray-900 p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
+                  <MdOutlinePeopleAlt className="text-2xl text-gray-600 group-hover:text-white " />
+                  <h3 className="text-base text-gray-800 group-hover:text-white font-semibold ">
+                    Daftar Pengunjung
                   </h3>
                 </div>
                 <div onClick={handleListNarapidana} className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-gray-900 p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
@@ -92,7 +102,7 @@ function SideNavbar() {
               </div>
             </div>
             {/* logout */}
-            <div onClick={handleLogout} className=" my-4">
+            <div onClick={handleLogout} className="my-4">
               <div className="flex mb-2 justify-start items-center gap-4 pl-5 border border-gray-200  hover:bg-gray-900 p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
                 <MdOutlineLogout className="text-2xl text-gray-600 group-hover:text-white " />
                 <h3 className="text-base text-gray-800 group-hover:text-white font-semibold ">
