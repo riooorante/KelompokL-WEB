@@ -1,54 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import SideNavbar from '../components/SideNavbar';
+import withAuth from "../components/withAuth";;
 
 function ListNarapidana() {
-  const [data, setData] = useState([
-    { id: 1, nama: 'John Doe' },
-    // Tambahkan data lainnya di sini
-  ]);
+  const router = useRouter();
+  const [data, setData] = useState([]);
 
-  const [editIndex, setEditIndex] = useState(null);
-  const [editForm, setEditForm] = useState({
-    id: '',
-    nama: ''
-  });
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await fetch("http://127.0.0.1:8000/narapidana/get-narapidana/", {
+          method: "GET",
+          headers: {
+            "Accept": "application/json",
+            "Authorization": token,
+          },
+        });
 
-  const handleEditData = (index, item) => {
-    setEditIndex(index);
-    setEditForm(item);
-  };
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
 
-  const handleUpdateData = () => {
-    const updatedData = [...data];
-    updatedData[editIndex] = editForm;
-    setData(updatedData);
-    setEditIndex(null);
-    setEditForm({
-      id: '',
-      nama: ''
-    });
-  };
+        const result = await response.json();
+        setData(result);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleTambahData = () => {
-    setData([...data, { id: data.length + 1, nama: '' }]);
+    router.push('/tambahNarapidana'); 
   };
 
-  const handleHapusData = (index) => {
-    const updatedData = [...data];
-    updatedData.splice(index, 1);
-    setData(updatedData);
+  const handleHapusData = async (index) => {
+    const confirmed = window.confirm('Apakah Anda yakin ingin menghapus data ini?');
+    if (confirmed) {
+      const token = localStorage.getItem("token");
+      const narapidanaId = data[index].nomor_narapidana;
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/narapidana/delete-narapidana/${narapidanaId}/`, {
+          method: "DELETE",
+          headers: {
+            "Authorization": token,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to delete data");
+        }
+
+        const updatedData = [...data];
+        updatedData.splice(index, 1);
+        setData(updatedData);
+      } catch (error) {
+        console.error("Error deleting data:", error);
+        alert("Gagal menghapus data, silakan coba lagi.");
+      }
+    }
   };
 
   const handleCheckProfil = (index) => {
-    // Logika untuk menampilkan profil narapidana, misalnya dengan router push ke halaman profil narapidana
+    const narapidanaId = data[index].nomor_narapidana;
+    router.push(`/profileNarapidana?id=${narapidanaId}`);
   };
 
-  const handleBatalEdit = () => {
-    setEditIndex(null);
-    setEditForm({
-      id: '',
-      nama: ''
-    });
+  const handleCheckSuratNarapidana = (index) => {
+    const narapidanaId = data[index].nomor_narapidana; 
+    router.push(`/suratNarapidana?id=${narapidanaId}`); 
   };
 
   return (
@@ -61,7 +84,7 @@ function ListNarapidana() {
             <thead>
               <tr>
                 <th className="border border-gray-300 px-2 py-1">No</th>
-                <th className="border border-gray-300 px-2 py-1">ID</th>
+                <th className="border border-gray-300 px-2 py-1">Nomor Tahanan</th>
                 <th className="border border-gray-300 px-2 py-1">Nama</th>
                 <th className="border border-gray-300 px-2 py-1">Aksi</th>
               </tr>
@@ -70,28 +93,37 @@ function ListNarapidana() {
               {data.map((item, index) => (
                 <tr key={index}>
                   <td className="border border-gray-300 px-2 py-1">{index + 1}</td>
-                  <td className="border border-gray-300 px-2 py-1">{item.id}</td>
-                  <td className="border border-gray-300 px-2 py-1">{editIndex === index ? <input value={editForm.nama} onChange={(e) => setEditForm({ ...editForm, nama: e.target.value })} /> : item.nama}</td>
+                  <td className="border border-gray-300 px-2 py-1">{item.nomor_narapidana}</td>
+                  <td className="border border-gray-300 px-2 py-1">{item.nama}</td>
                   <td className="border border-gray-300 px-2 py-1">
-                    {editIndex === index ? (
-                      <>
-                        <button onClick={handleUpdateData} className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded mr-2">Simpan</button>
-                        <button onClick={handleBatalEdit} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-2 rounded mr-2">Batal</button>
-                      </>
-                    ) : (
-                      <>
-                        <button onClick={() => handleEditData(index, item)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mr-2">Edit</button>
-                        <button onClick={() => handleHapusData(index)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded mr-2">Hapus</button>
-                        <button onClick={() => handleCheckProfil(index)} className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded">Check Profil</button>
-                      </>
-                    )}
+                    <button
+                      onClick={() => handleHapusData(index)}
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded mr-2"
+                    >
+                      Hapus
+                    </button>
+                    <button
+                      onClick={() => handleCheckProfil(index)}
+                      className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded mr-2"
+                    >
+                      Check Profil
+                    </button>
+                    <button
+                      onClick={() => handleCheckSuratNarapidana(index)} 
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                    >
+                      Check Surat
+                    </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
           <div className="mt-4 ml-4">
-            <button onClick={handleTambahData} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button
+              onClick={handleTambahData}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
               Tambah Data
             </button>
           </div>
@@ -101,4 +133,4 @@ function ListNarapidana() {
   );
 }
 
-export default ListNarapidana;
+export default withAuth(ListNarapidana);

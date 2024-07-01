@@ -1,14 +1,13 @@
 // pages/dashboard.js
+
+import withAuth from "../components/withAuth";
 import SideNavbar from "../components/SideNavbar";
 
-export default function Dashboard() {
+function Dashboard() {
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
       <SideNavbar />
-      {/* Konten Dashboard */}
       <div className="flex flex-col items-center justify-center w-full px-8">
-        {/* Membuat konten dashboard lebih besar */}
         <h1 className="text-4xl font-bold mb-8 text-center">Selamat Datang di Dashboard!</h1>
         <div className="bg-white rounded-lg shadow-md w-full md:max-w-4xl p-8 text-center">
           <h2 className="text-3xl font-semibold text-blue-600 mb-4">Tentang Sistem Manajemen Penjara</h2>
@@ -21,3 +20,5 @@ export default function Dashboard() {
     </div>
   );
 }
+
+export default withAuth(Dashboard);
